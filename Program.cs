@@ -4,6 +4,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+builder.Services.AddCors(
+  o => o.AddPolicy("CorsPolicy", builder =>
+  {
+      builder
+      .AllowAnyMethod()
+      .AllowAnyHeader()
+      .AllowCredentials()
+      .WithOrigins("http://localhost:4200");
+  })
+);
+
 
 var app = builder.Build();
 
@@ -24,5 +35,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapHub<ChatHub>("/chatHub");
+app.UseCors("CorsPolicy");
 
 app.Run();
